@@ -43,6 +43,8 @@
 
 (use-package! cider)
 
+;; sclang installed with emacs on arch
+(use-package! sclang)
 (use-package! sclang-extensions)
 (use-package! sclang-snippets)
 
@@ -51,3 +53,4 @@
 ;; (use-package! lsp
 ;;   :config
 ;;   (setq lsp-ui-doc-enable t))
+
