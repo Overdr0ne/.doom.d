@@ -357,4 +357,26 @@
 ;;
 ;;; Bootstrap configs
 
-(load! "+evil")
+(defun +default|disable-delete-selection-mode ()
+  (delete-selection-mode -1))
+(add-hook 'evil-insert-state-entry-hook #'delete-selection-mode)
+(add-hook 'evil-insert-state-exit-hook  #'+default|disable-delete-selection-mode)
+
+
+;;
+;;; Keybindings
+
+;; This section is dedicated to "fixing" certain keys so that they behave
+;; sensibly (and consistently with similar contexts).
+
+;; Make SPC u SPC u [...] possible (#747)
+(map! :map universal-argument-map
+      :prefix doom-leader-key     "u" #'universal-argument-more
+      :prefix doom-leader-alt-key "u" #'universal-argument-more)
+
+;; use deer as default directory handler
+(add-to-list 'find-directory-functions 'deer)
+(setq ranger-show-hidden t)
+
+;;(set-frame-parameter (selected-frame) 'alpha '(<active> . <inactive>))
+ ;;(set-frame-parameter (selected-frame) 'alpha <both>)

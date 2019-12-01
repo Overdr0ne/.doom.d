@@ -16,14 +16,14 @@
               +icons)    ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
       ;eshell            ; a consistent, cross-platform shell (WIP)
-       imenu             ; an imenu sidebar and searchable code index
+       ;imenu             ; an imenu sidebar and searchable code index
        vc                ; remember, remember that commit in November
 
        :editor
        (evil +everywhere); come to the dark side, we have cookies
        file-templates    ; auto-snippets for empty files
        fold              ; (nigh) universal code folding
-       (format +onsave)  ; automated prettiness
+       (format)          ; automated prettiness
        multiple-cursors  ; editing in many places at once
        rotate-text       ; cycle region at point between text candidates
        snippets          ; my elves. They type so I don't have to
@@ -49,6 +49,7 @@
        workspaces        ; tab emulation, persistence & separate workspaces
 
        :tools
+       lsp
        eval              ; run code, run (also, repls)
        ein               ; tame Jupyter notebooks with emacs
        gist              ; interacting with github gists
@@ -68,20 +69,20 @@
 
        :lang
        assembly          ; assembly for fun or debugging
-       cc                ; C/C++/Obj-C madness
-       crystal           ; ruby at the speed of c
+       (cc +lsp)         ; C/C++/Obj-C madness
+       ;;crystal           ; ruby at the speed of c
        clojure           ; java with a lisp
-       csharp            ; unity, .NET, and mono shenanigans
+       ;;csharp            ; unity, .NET, and mono shenanigans
        data              ; config/data formats
        erlang            ; an elegant language for a more civilized age
        elixir            ; erlang done right
        elm               ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
        ess               ; emacs speaks statistics
-       go                ; the hipster dialect
+       ;;go                ; the hipster dialect
       ;haskell           ; a language that's lazier than I am
        hy                ; readability of scheme w/ speed of python
-       (java +meghanada) ; the poster child for carpal tunnel syndrome
+       ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
        javascript        ; all(hope(abandon(ye(who(enter(here))))))
        julia             ; a better, faster MATLAB
        latex             ; writing papers in Emacs has never been so fun
@@ -97,9 +98,9 @@
         +export          ; Exporting org to whatever you want
         +present         ; Emacs for presentations
         +publish)        ; Emacs+Org as a static site generator
-       perl              ; write code no one else can comprehend
+       ;perl              ; write code no one else can comprehend
        php               ; perl's insecure younger brother
-       plantuml          ; diagrams for confusing people more
+       ;;plantuml          ; diagrams for confusing people more
        purescript        ; javascript, but functional
        (python +pyenv)   ; beautiful is better than ugly
        rest              ; Emacs as a REST client
@@ -152,14 +153,11 @@
             "/usr/sbin/"
             "/sbin/"
             (concat (getenv "HOME") "/.nix-profile/bin")
+            (concat (getenv "HOME") "/bin")
             (concat (getenv "HOME") "/.cargo/bin")
             (concat (getenv "HOME") "/.local/bin")))
 
 (setenv "PATH" (string-join exec-path ":"))
-
-
-
-
 
 ;; Auto revert-mode. Look ma, no hands...
 (global-auto-revert-mode t)
@@ -179,10 +177,88 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ecb-options-version "2.50"))
+ '(ecb-options-version "2.50")
+ '(safe-local-variable-values
+   (quote
+    ((multi-compile-alist
+      ("\\.*"
+       ("build" . "cd /home/sam/src/bioport && west build .")
+       ("flash" . "cd /home/sam/src/bioport && west flash")
+       ("pristine" . "cd /home/sam/src/bioport && west build -p && cp ./build/compile_commands.json")))
+     (multi-compile-alist
+      ("\\.*"
+       ("build" . "cd /home/sam/src/bioport && west build . && cp ./build/compile_commands.json .")
+       ("flash" . "cd /home/sam/src/bioport && west flash")
+       ("pristine" . "cd /home/sam/src/bioport && west build -p && cp ./build/compile_commands.json")))
+     (multi-compile-alist
+      ("\\.*"
+       ("build" . "cd /home/sam/src/bioport && west build . && cp build/compile_commands.json .")
+       ("flash" . "cd /home/sam/src/bioport && west flash")
+       ("pristine" . "cd /home/sam/src/bioport && west build -p && cp build/compile_commands.json")))
+     (multi-compile-alist
+      ("\\.*"
+       ("build" . "cd /home/sam/src/bioport && west build . && cp build/compile_commands.json")
+       ("flash" . "cd /home/sam/src/bioport && west flash")
+       ("pristine" . "cd /home/sam/src/bioport && west build -p && cp build/compile_commands.json")))
+     (multi-compile-alist
+      ("\\.*"
+       ("build" . "cd /home/sam/src/bioport && west build . && cp build/compile_commands.json")
+       ("flash" . "cd /home/sam/src/bioport && west flash")
+       ("pristine" . "cd /home/sam/src/bioport && west build -p . && cp build/compile_commands.json")))
+     (multi-compile-alist
+      ("\\.*"
+       ("build" . "cd /home/sam/src/bioport && west build .")
+       ("flash" . "cd /home/sam/src/bioport && west flash")
+       ("make" . "cd build && cmake -DBOARD=nrf52_pca10040 -GNinja .. && cp compile_commands.json ..")
+       ("clean" . "cd build && ninja clean && ninja flash")))
+     (multi-compile-alist
+      ("\\.*"
+       ("build" . "cd /home/sam/src/bioport && west build .")
+       ("source" . "source ../zephyr/zephyr-env.sh")
+       ("make" . "cd build && cmake -DBOARD=nrf52_pca10040 -GNinja .. && cp compile_commands.json ..")
+       ("clean" . "cd build && ninja clean && ninja flash")))
+     (multi-compile-alist
+      ("\\.*"
+       ("build" . "cd /home/sam/src/west-manifest && ninja flash")
+       ("source" . "source ../zephyr/zephyr-env.sh")
+       ("make" . "cd build && cmake -DBOARD=nrf52_pca10040 -GNinja .. && cp compile_commands.json ..")
+       ("clean" . "cd build && ninja clean && ninja flash")))
+     (multi-compile-alist
+      ("\\.*"
+       ("build" . "cd /home/sam/west-manifest && ninja flash")
+       ("source" . "source ../zephyr/zephyr-env.sh")
+       ("make" . "cd build && cmake -DBOARD=nrf52_pca10040 -GNinja .. && cp compile_commands.json ..")
+       ("clean" . "cd build && ninja clean && ninja flash")))
+     (multi-compile-alist
+      ("\\.*"
+       ("build" . "cd build && ninja flash")
+       ("source" . "source ../zephyr/zephyr-env.sh")
+       ("make" . "cd build && cmake -DBOARD=nrf52_pca10040 -GNinja .. && cp compile_commands.json ..")
+       ("clean" . "cd build && ninja clean && ninja flash")))
+     (multi-compile-alist
+      ("\\.*"
+       ("build" . "cd build && ninja flash")
+       ("source" . "source ../zephyr/zephyr-env.sh")
+       ("make" . "cd build && cmake -DBOARD=nrf52_pca10040 -GNinja .. && cp compile_commands.json ..")
+       ("clean build" . "cd build && ninja clean && ninja flash")))
+     (multi-compile-alist
+      ("\\.*"
+       ("build" . "cd build && ninja flash")
+       ("make" . "cd build && cmake -DBOARD=nrf52_pca10040 -GNinja .. && cp compile_commands.json ..")
+       ("clean build" . "cd build && ninja clean && ninja flash")))
+     (checkdoc-package-keywords-flag)
+     (multi-compile-alist
+      ("\\.*"
+       ("build" . "cd build && ninja flash")
+       ("clean build" . "cd build && ninja clean && ninja flash")))
+     (multi-compile-alist
+      ("\\.*"
+       ("build" . "cd build && ninja flash")
+       ("make" . "cd build && ninja flash")))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(mode-line ((t (:background "#1c1e24" :box nil)))))
+

@@ -1,6 +1,6 @@
-;;; private/rschmukler/functions.el -*- lexical-binding: t; -*-
+;;; functions.el -*- lexical-binding: t; -*-
 
-(defun rschmukler/neotree-project-root-dir-or-current-dir ()
+(defun neotree-project-root-dir-or-current-dir ()
   "Open NeoTree using the project root, using projectile, or the
 current buffer directory."
   (interactive)
