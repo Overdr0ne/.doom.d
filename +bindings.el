@@ -53,6 +53,7 @@
         "`"   #'sr-speedbar-toggle
         "C-k" 'insert-line-above
         "C-j" 'insert-line-below
+        "J"   'evil-jump-item
         "M-k" 'evil-scroll-line-up
         "M-j" 'evil-scroll-line-down)
 
