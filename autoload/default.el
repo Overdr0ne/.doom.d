@@ -1,18 +1,6 @@
 ;; config/default/autoload/default.el -*- lexical-binding: t; -*-
 
 ;;;###autoload
-(defadvice bookmark-jump (after bookmark-jump activate)
-  (let ((latest (bookmark-get-bookmark bookmark)))
-    (setq bookmark-alist (delq latest bookmark-alist))
-    (add-to-list 'bookmark-alist latest)))
-
-(defun my-reload-dir-locals-for-current-buffer ()
-  "reload dir locals for the current buffer"
-  (interactive)
-  (let ((enable-local-variables :all))
-    (hack-dir-local-variables-non-file-buffer)))
-
-;;;###autoload
 (defun +default/yank-buffer-filename ()
   "Copy the current buffer's path to the kill ring."
   (interactive)
@@ -21,25 +9,46 @@
     (error "Couldn't find filename in current buffer")))
 
 ;;;###autoload
-(defun sam-compile ()
-  (interactive)
-  (projectile-with-default-dir
-      (if (projectile-project-p) (projectile-project-root) default-directory)
-    (multi-compile-run)))
-;; (defun +default/compile (arg)
-;;   "Runs `compile' from the root of the current project.
+(defun +default/browse-project ()
+  (interactive) (doom-project-browse (doom-project-root)))
+;; NOTE No need for find-in-project, use `projectile-find-file'
 
-;; If a compilation window is already open, recompile that instead.
+;;;###autoload
+(defun +default/browse-templates ()
+  (interactive) (doom-project-browse +file-templates-dir))
+;;;###autoload
+(defun +default/find-in-templates ()
+  (interactive) (doom-project-find-file +file-templates-dir))
 
-;; If ARG (universal argument), runs `compile' from the current directory."
-;;   (interactive "P")
-;;   (if (and (bound-and-true-p compilation-in-progress)
-;;            (buffer-live-p compilation-last-buffer))
-;;       (recompile)
-;;     (call-interactively
-;;      (if arg
-;;          #'projectile-compile-project
-;;        #'compile))))
+;;;###autoload
+(defun +default/browse-emacsd ()
+  (interactive) (doom-project-browse doom-emacs-dir))
+;;;###autoload
+(defun +default/find-in-emacsd ()
+  (interactive) (doom-project-find-file doom-emacs-dir))
+
+;;;###autoload
+(defun +default/browse-notes ()
+  (interactive) (doom-project-browse org-directory))
+;;;###autoload
+(defun +default/find-in-notes ()
+  (interactive) (doom-project-find-file org-directory))
+
+;;;###autoload
+(defun +default/compile (arg)
+  "Runs `compile' from the root of the current project.
+
+If a compilation window is already open, recompile that instead.
+
+If ARG (universal argument), runs `compile' from the current directory."
+  (interactive "P")
+  (if (and (bound-and-true-p compilation-in-progress)
+           (buffer-live-p compilation-last-buffer))
+      (recompile)
+    (call-interactively
+     (if arg
+         #'projectile-compile-project
+       #'compile))))
 
 ;;;###autoload
 (defun +default/man-or-woman ()
@@ -298,14 +307,3 @@ ARG is set, prompt for a known project to search from."
   (interactive)
   (doom-completing-read-org-headings
    "Jump to org headline: " org-agenda-files 3 t))
-
-(defun string/ends-with (s ending)
-  "Return non-nil if string S ends with ENDING."
-  (cond ((>= (length s) (length ending))
-          (string= (substring s (- (length ending))) ending))
-        (t nil)))
-(defun string/starts-with (s begins)
-  "Return non-nil if string S starts with BEGINS."
-  (cond ((>= (length s) (length begins))
-          (string-equal (substring s 0 (length begins)) begins))
-        (t nil)))

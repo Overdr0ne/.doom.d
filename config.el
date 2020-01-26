@@ -1,5 +1,6 @@
 (load! "+autoload")
 (load! "+base")
+(load! "+use-package")
 (load! "+bindings")
 
 (set-frame-parameter (selected-frame) 'alpha '(93 . 70))
@@ -15,7 +16,15 @@
 (set-face-attribute 'default nil :height 140)
 (setq doom-font (font-spec :family "fira mono" :size 18))
 (setq display-line-numbers-type nil)
+(setq user-mail-address "scmorris.dev@gmail.com")
+(turn-off-auto-fill)
+(auto-fill-mode -1)
+(remove-hook 'text-mode-hook 'auto-fill-mode)
+(remove-hook 'markdown-mode-hook 'auto-fill-mode)
+(add-hook 'text-mode-hook 'visual-line-mode)
+
+(setq browse-url-browser-function 'eww-browse-url)
+;; (add-hook 'eww-mode-hook
+;;           (lambda () (load-theme-buffer-local 'plan9 (current-buffer))))
 
 (evil-commentary-mode)
-
-(load! "+package-config")

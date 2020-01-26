@@ -374,9 +374,5 @@
       :prefix doom-leader-key     "u" #'universal-argument-more
       :prefix doom-leader-alt-key "u" #'universal-argument-more)
 
-;; use deer as default directory handler
-(add-to-list 'find-directory-functions 'deer)
-(setq ranger-show-hidden t)
-
 ;;(set-frame-parameter (selected-frame) 'alpha '(<active> . <inactive>))
  ;;(set-frame-parameter (selected-frame) 'alpha <both>)

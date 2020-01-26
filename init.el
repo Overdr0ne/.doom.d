@@ -6,14 +6,15 @@
        (company          ; the ultimate code completion backend
         +auto            ; as-you-type code completion
         +childframe)     ; a nicer company UI. Emacs +26 only!
-      ;helm              ; the *other* search engine for love and life
+      helm              ; the *other* search engine for love and life
       ;ido               ; the other *other* search engine...
-       (ivy +childframe
-            +icons)      ; a search engine for love and life
+      (ivy +childframe
+           +icons)      ; a search engine for love and life
 
        :emacs
-       (dired +ranger
-              +icons)    ; making dired pretty [functional]
+       ;; (dired +ranger
+       ;;        +icons)    ; making dired pretty [functional]
+       ;; (dired +icons)
        electric          ; smarter, keyword-based electric-indent
       ;eshell            ; a consistent, cross-platform shell (WIP)
        ;imenu             ; an imenu sidebar and searchable code index
@@ -38,15 +39,15 @@
        nav-flash         ; blink the current line after jumping
        neotree           ; a project drawer, like NERDTree for vim
       ;posframe          ; use child frames where possible (Emacs 26+ only)
-       (popup            ; tame sudden yet inevitable temporary windows
-        +all             ; catch all popups that start with an asterix
-        +defaults)       ; default popup rules
+      ;; (popup            ; tame sudden yet inevitable temporary windows
+      ;;  +all             ; catch all popups that start with an asterix
+      ;;  +defaults)       ; default popup rules
       ;tabbar            ; FIXME an (incomplete) tab bar for Emacs
       ;unicode           ; extended unicode support for various languages
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        vc-gutter         ; commit status in the sidelines
        window-select     ; visually switch windows
-       workspaces        ; tab emulation, persistence & separate workspaces
+       ;; workspaces        ; tab emulation, persistence & separate workspaces
 
        :tools
        lsp
@@ -56,7 +57,7 @@
        (lookup           ; helps you navigate your code and documentation
         +devdocs         ; ...on devdocs.io online
         +docsets)        ; ...or in Dash docsets locally
-       macos             ; MacOS-specific commands
+       ;; macos             ; MacOS-specific commands
        make              ; run make tasks from Emacs
        magit             ;
        pass              ; password manager for nerds
@@ -119,8 +120,8 @@
        ;; should be loaded late.
        :app
       ;(email +gmail)    ; emacs as an email client
-      ;irc               ; how neckbeards socialize
-      ;(rss +org)        ; emacs as an RSS reader
+      irc               ; how neckbeards socialize
+      (rss +org)        ; emacs as an RSS reader
       ;twitter           ; twitter client https://twitter.com/vnought
       ;(write            ; emacs as a word processor (latex + org + markdown)
       ; +wordnut         ; wordnet (wn) search
@@ -162,14 +163,14 @@
 ;; Auto revert-mode. Look ma, no hands...
 (global-auto-revert-mode t)
 
-(setq
- whitespace-line-column 100
- whitespace-style
- '(face trailing lines-tail))
-(global-whitespace-mode)
+;; (setq
+;;  whitespace-line-column 100
+;;  whitespace-style
+;;  '(face trailing lines-tail))
+;; (global-whitespace-mode)
 
 ;; Turn off line wrapping
-(setq-default truncate-lines 1)
+(setq-default truncate-lines 0)
 
 (add-hook 'before-save-hook 'whitespace-cleanup)
 (custom-set-variables
@@ -177,10 +178,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(bmkp-last-as-first-bookmark-file "~/.emacs.d/.local/etc/bookmarks")
  '(ecb-options-version "2.50")
  '(safe-local-variable-values
    (quote
-    ((multi-compile-alist
+    ((magit-todos-exclude-globs "public/*")
+     (multi-compile-alist
       ("\\.*"
        ("build" . "cd /home/sam/src/bioport && west build .")
        ("flash" . "cd /home/sam/src/bioport && west flash")
@@ -254,11 +257,11 @@
      (multi-compile-alist
       ("\\.*"
        ("build" . "cd build && ninja flash")
-       ("make" . "cd build && ninja flash")))))))
+       ("make" . "cd build && ninja flash"))))))
+ '(sclang-help-path (quote ("/usr/share/SuperCollider/HelpSource"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(mode-line ((t (:background "#1c1e24" :box nil)))))
-
