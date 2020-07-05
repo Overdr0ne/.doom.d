@@ -1,6 +1,27 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; config/default/packages.el
 
+;; (package! company)
+;; (package! company-box)
+
+;; (package! counsel-dash)
+;; (package! counsel-projectile)
+
+;; (package! all-the-icons-ivy)
+;; (package! ivy-hydra)
+;; (package! ivy-rich)
+;; (package! ivy-xref)
+;; (package! posframe)
+;; (package! ivy-posframe)
+;; (package! amx)
+
+;; (package! wgrep)
+
+;; (package! anzu)
+;; (package! evil-anzu)
+;; (package! doom-modeline)
+;; (package! shrink-path)
+
 (package! avy)
 (package! ace-link)
 (package! dts-mode)
@@ -16,13 +37,15 @@
 (package! sclang-extensions)
 (package! sclang-snippets)
 (package! w3m)
-(package! dired-imenu)
 (package! cyberpunk-2019-theme)
 (package! interaction-log)
 (package! visual-fill-column)
 (package! helm-recoll)
 (package! find-file-in-project)
+
 (package! org-ref)
+;; (package! org-roam :recipe (:host github :repo "jethrokuan/org-roam"))
+
 (package! bookmark+ :recipe (:host github :repo "fnoon/BookmarkPlus"))
 
 (package! system-packages)
@@ -52,5 +75,25 @@
 ;; (package! lsp-intellij)
 
 (package! all-the-icons-dired)
+(package! dired-imenu)
 (package! dired-rainbow)
+(package! dired-ranger)
+(package! dired-filter)
 (package! dired+ :recipe (:host github :repo "emacsmirror/dired-plus"))
+(package! highlight)
+
+(package! smart-tabs-mode)
+
+(package! deft)
+
+(package! auto-compile)
+
+(package! all-the-icons-ibuffer)
+
+(package! explain-pause-mode :recipe (:host github :repo "lastquestion/explain-pause-mode"))
+
+(package! daemons)
+
+;; (package! pretty-mode)
+
+(package! names)

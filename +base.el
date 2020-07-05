@@ -2,13 +2,13 @@
 
 (defvar +default-minibuffer-maps
   `(minibuffer-local-map
-     minibuffer-local-ns-map
-     minibuffer-local-completion-map
-     minibuffer-local-must-match-map
-     minibuffer-local-isearch-map
-     read-expression-map
-     ivy-minibuffer-map
-     ivy-switch-buffer-map)
+	 minibuffer-local-ns-map
+	 minibuffer-local-completion-map
+	 minibuffer-local-must-match-map
+	 minibuffer-local-isearch-map
+	 read-expression-map
+	 ivy-minibuffer-map
+	 ivy-switch-buffer-map)
   "A list of all the keymaps used for the minibuffer.")
 
 
@@ -17,21 +17,21 @@
 
 ;;;###package avy
 (setq avy-all-windows nil
-      avy-all-windows-alt t
-      avy-background t)
+	  avy-all-windows-alt t
+	  avy-background t)
 
 
 (after! epa
   (setq epa-file-encrypt-to
-        (or epa-file-encrypt-to
-            ;; Collect all public key IDs with your username
-            (unless (string-empty-p user-full-name)
-              (cl-loop for key in (ignore-errors (epg-list-keys (epg-make-context) user-full-name))
-                       collect (epg-sub-key-id (car (epg-key-sub-key-list key)))))
-            user-mail-address)
-        ;; With GPG 2.1, this forces gpg-agent to use the Emacs minibuffer to
-        ;; prompt for the key passphrase.
-        epa-pinentry-mode 'loopback))
+		(or epa-file-encrypt-to
+			;; Collect all public key IDs with your username
+			(unless (string-empty-p user-full-name)
+			  (cl-loop for key in (ignore-errors (epg-list-keys (epg-make-context) user-full-name))
+					   collect (epg-sub-key-id (car (epg-key-sub-key-list key)))))
+			user-mail-address)
+		;; With GPG 2.1, this forces gpg-agent to use the Emacs minibuffer to
+		;; prompt for the key passphrase.
+		epa-pinentry-mode 'loopback))
 
 
 ;;
@@ -42,158 +42,158 @@
 ;; or specific :post-handlers with:
 ;;   (sp-pair "{" nil :post-handlers '(:rem ("| " "SPC")))
 (after! smartparens
-        ;; Smartparens is broken in `cc-mode' as of Emacs 27. See
-        ;; <https://github.com/Fuco1/smartparens/issues/963>.
-        (unless EMACS27+
-          (pushnew! sp--special-self-insert-commands 'c-electric-paren 'c-electric-brace))
+		;; Smartparens is broken in `cc-mode' as of Emacs 27. See
+		;; <https://github.com/Fuco1/smartparens/issues/963>.
+		(unless EMACS27+
+		  (pushnew! sp--special-self-insert-commands 'c-electric-paren 'c-electric-brace))
 
-        ;; Smartparens' navigation feature is neat, but does not justify how
-        ;; expensive it is. It's also less useful for evil users. This may need to
-        ;; be reactivated for non-evil users though. Needs more testing!
-        (add-hook! 'after-change-major-mode-hook
-                   (defun doom-disable-smartparens-navigate-skip-match-h ()
-                     (setq sp-navigate-skip-match nil
-                           sp-navigate-consider-sgml-tags nil)))
+		;; Smartparens' navigation feature is neat, but does not justify how
+		;; expensive it is. It's also less useful for evil users. This may need to
+		;; be reactivated for non-evil users though. Needs more testing!
+		(add-hook! 'after-change-major-mode-hook
+				   (defun doom-disable-smartparens-navigate-skip-match-h ()
+					 (setq sp-navigate-skip-match nil
+						   sp-navigate-consider-sgml-tags nil)))
 
-        ;; Autopair quotes more conservatively; if I'm next to a word/before another
-        ;; quote, I likely don't want to open a new pair.
-        (let ((unless-list '(sp-point-before-word-p
-                              sp-point-after-word-p
-                              sp-point-before-same-p)))
-          (sp-pair "'"  nil :unless unless-list)
-          (sp-pair "\"" nil :unless unless-list))
+		;; Autopair quotes more conservatively; if I'm next to a word/before another
+		;; quote, I likely don't want to open a new pair.
+		(let ((unless-list '(sp-point-before-word-p
+							  sp-point-after-word-p
+							  sp-point-before-same-p)))
+		  (sp-pair "'"  nil :unless unless-list)
+		  (sp-pair "\"" nil :unless unless-list))
 
-        ;; Expand {|} => { | }
-        ;; Expand {|} => {
-        ;;   |
-        ;; }
-        (dolist (brace '("(" "{" "["))
-          (sp-pair brace nil
-                   :post-handlers '(("||\n[i]" "RET") ("| " "SPC"))
-                   ;; I likely don't want a new pair if adjacent to a word or opening brace
-                   :unless '(sp-point-before-word-p sp-point-before-same-p)))
+		;; Expand {|} => { | }
+		;; Expand {|} => {
+		;;   |
+		;; }
+		(dolist (brace '("(" "{" "["))
+		  (sp-pair brace nil
+				   :post-handlers '(("||\n[i]" "RET") ("| " "SPC"))
+				   ;; I likely don't want a new pair if adjacent to a word or opening brace
+				   :unless '(sp-point-before-word-p sp-point-before-same-p)))
 
-        ;; In lisps ( should open a new form if before another parenthesis
-        (sp-local-pair sp-lisp-modes "(" ")" :unless '(:rem sp-point-before-same-p))
+		;; In lisps ( should open a new form if before another parenthesis
+		(sp-local-pair sp-lisp-modes "(" ")" :unless '(:rem sp-point-before-same-p))
 
-        ;; Major-mode specific fixes
-        (sp-local-pair '(ruby-mode enh-ruby-mode) "{" "}"
-                       :pre-handlers '(:rem sp-ruby-pre-handler)
-                       :post-handlers '(:rem sp-ruby-post-handler))
+		;; Major-mode specific fixes
+		(sp-local-pair '(ruby-mode enh-ruby-mode) "{" "}"
+					   :pre-handlers '(:rem sp-ruby-pre-handler)
+					   :post-handlers '(:rem sp-ruby-post-handler))
 
-        ;; Don't do square-bracket space-expansion where it doesn't make sense to
-        (sp-local-pair '(emacs-lisp-mode org-mode markdown-mode gfm-mode)
-                       "[" nil :post-handlers '(:rem ("| " "SPC")))
+		;; Don't do square-bracket space-expansion where it doesn't make sense to
+		(sp-local-pair '(emacs-lisp-mode org-mode markdown-mode gfm-mode)
+					   "[" nil :post-handlers '(:rem ("| " "SPC")))
 
-        ;; Reasonable default pairs for HTML-style comments
-        (sp-local-pair (append sp--html-modes '(markdown-mode gfm-mode))
-                       "<!--" "-->"
-                       :unless '(sp-point-before-word-p sp-point-before-same-p)
-                       :actions '(insert) :post-handlers '(("| " "SPC")))
+		;; Reasonable default pairs for HTML-style comments
+		(sp-local-pair (append sp--html-modes '(markdown-mode gfm-mode))
+					   "<!--" "-->"
+					   :unless '(sp-point-before-word-p sp-point-before-same-p)
+					   :actions '(insert) :post-handlers '(("| " "SPC")))
 
-        ;; Disable electric keys in C modes because it interferes with smartparens
-        ;; and custom bindings. We'll do it ourselves (mostly).
-        (after! cc-mode
-                (c-toggle-electric-state -1)
-                (c-toggle-auto-newline -1)
-                (setq c-electric-flag nil)
-                (dolist (key '("#" "{" "}" "/" "*" ";" "," ":" "(" ")" "\177"))
-                  (define-key c-mode-base-map key nil))
+		;; Disable electric keys in C modes because it interferes with smartparens
+		;; and custom bindings. We'll do it ourselves (mostly).
+		(after! cc-mode
+				(c-toggle-electric-state -1)
+				(c-toggle-auto-newline -1)
+				(setq c-electric-flag nil)
+				(dolist (key '("#" "{" "}" "/" "*" ";" "," ":" "(" ")" "\177"))
+				  (define-key c-mode-base-map key nil))
 
-                ;; Smartparens and cc-mode both try to autoclose angle-brackets
-                ;; intelligently. The result isn't very intelligent (causes redundant
-                ;; characters), so just do it ourselves.
-                (define-key! c++-mode-map "<" nil ">" nil)
+				;; Smartparens and cc-mode both try to autoclose angle-brackets
+				;; intelligently. The result isn't very intelligent (causes redundant
+				;; characters), so just do it ourselves.
+				(define-key! c++-mode-map "<" nil ">" nil)
 
-                (defun +default-cc-sp-point-is-template-p (id action context)
-                  "Return t if point is in the right place for C++ angle-brackets."
-                  (and (sp-in-code-p id action context)
-                       (cond ((eq action 'insert)
-                              (sp-point-after-word-p id action context))
-                             ((eq action 'autoskip)
-                              (/= (char-before) 32)))))
+				(defun +default-cc-sp-point-is-template-p (id action context)
+				  "Return t if point is in the right place for C++ angle-brackets."
+				  (and (sp-in-code-p id action context)
+					   (cond ((eq action 'insert)
+							  (sp-point-after-word-p id action context))
+							 ((eq action 'autoskip)
+							  (/= (char-before) 32)))))
 
-                (defun +default-cc-sp-point-after-include-p (id action context)
-                  "Return t if point is in an #include."
-                  (and (sp-in-code-p id action context)
-                       (save-excursion
-                         (goto-char (line-beginning-position))
-                         (looking-at-p "[ 	]*#include[^<]+"))))
+				(defun +default-cc-sp-point-after-include-p (id action context)
+				  "Return t if point is in an #include."
+				  (and (sp-in-code-p id action context)
+					   (save-excursion
+						 (goto-char (line-beginning-position))
+						 (looking-at-p "[ 	]*#include[^<]+"))))
 
-                ;; ...and leave it to smartparens
-                (sp-local-pair '(c++-mode objc-mode)
-                               "<" ">"
-                               :when '(+default-cc-sp-point-is-template-p
-                                        +default-cc-sp-point-after-include-p)
-                               :post-handlers '(("| " "SPC")))
+				;; ...and leave it to smartparens
+				(sp-local-pair '(c++-mode objc-mode)
+							   "<" ">"
+							   :when '(+default-cc-sp-point-is-template-p
+										+default-cc-sp-point-after-include-p)
+							   :post-handlers '(("| " "SPC")))
 
-                (sp-local-pair '(c-mode c++-mode objc-mode java-mode)
-                               "/*!" "*/"
-                               :post-handlers '(("||\n[i]" "RET") ("[d-1]< | " "SPC"))))
+				(sp-local-pair '(c-mode c++-mode objc-mode java-mode)
+							   "/*!" "*/"
+							   :post-handlers '(("||\n[i]" "RET") ("[d-1]< | " "SPC"))))
 
-        ;; Expand C-style doc comment blocks. Must be done manually because some of
-        ;; these languages use specialized (and deferred) parsers, whose state we
-        ;; can't access while smartparens is doing its thing.
-        (defun +default-expand-asterix-doc-comment-block (&rest _ignored)
-          (let ((indent (current-indentation)))
-            (newline-and-indent)
-            (save-excursion
-              (newline)
-              (insert (make-string indent 32) " */")
-              (delete-char 2))))
-        (sp-local-pair
-          '(js2-mode typescript-mode rjsx-mode rust-mode c-mode c++-mode objc-mode
-                     csharp-mode java-mode php-mode css-mode scss-mode less-css-mode
-                     stylus-mode scala-mode)
-          "/*" "*/"
-          :actions '(insert)
-          :post-handlers '(("| " "SPC")
-                           ("|\n[i]*/[d-2]" "RET")
-                           (+default-expand-asterix-doc-comment-block "*")))
+		;; Expand C-style doc comment blocks. Must be done manually because some of
+		;; these languages use specialized (and deferred) parsers, whose state we
+		;; can't access while smartparens is doing its thing.
+		(defun +default-expand-asterix-doc-comment-block (&rest _ignored)
+		  (let ((indent (current-indentation)))
+			(newline-and-indent)
+			(save-excursion
+			  (newline)
+			  (insert (make-string indent 32) " */")
+			  (delete-char 2))))
+		(sp-local-pair
+		  '(js2-mode typescript-mode rjsx-mode rust-mode c-mode c++-mode objc-mode
+					 csharp-mode java-mode php-mode css-mode scss-mode less-css-mode
+					 stylus-mode scala-mode)
+		  "/*" "*/"
+		  :actions '(insert)
+		  :post-handlers '(("| " "SPC")
+						   ("|\n[i]*/[d-2]" "RET")
+						   (+default-expand-asterix-doc-comment-block "*")))
 
-        (after! smartparens-ml
-                (sp-with-modes '(tuareg-mode fsharp-mode)
-                               (sp-local-pair "(*" "*)" :actions nil)
-                               (sp-local-pair "(*" "*"
-                                              :actions '(insert)
-                                              :post-handlers '(("| " "SPC") ("|\n[i]*)[d-2]" "RET")))))
+		(after! smartparens-ml
+				(sp-with-modes '(tuareg-mode fsharp-mode)
+							   (sp-local-pair "(*" "*)" :actions nil)
+							   (sp-local-pair "(*" "*"
+											  :actions '(insert)
+											  :post-handlers '(("| " "SPC") ("|\n[i]*)[d-2]" "RET")))))
 
-        (after! smartparens-markdown
-                (sp-with-modes '(markdown-mode gfm-mode)
-                               (sp-local-pair "```" "```" :post-handlers '(:add ("||\n[i]" "RET")))
+		(after! smartparens-markdown
+				(sp-with-modes '(markdown-mode gfm-mode)
+							   (sp-local-pair "```" "```" :post-handlers '(:add ("||\n[i]" "RET")))
 
-                               ;; The original rules for smartparens had an odd quirk: inserting two
-                               ;; asterixex would replace nearby quotes with asterixes. These two rules
-                               ;; set out to fix this.
-                               (sp-local-pair "**" nil :actions :rem)
-                               (sp-local-pair "*" "*"
-                                              :actions '(insert skip)
-                                              :unless '(:rem sp-point-at-bol-p)
-                                              ;; * then SPC will delete the second asterix and assume
-                                              ;; you wanted a bullet point. * followed by another *
-                                              ;; will produce an extra, assuming you wanted **|**.
-                                              :post-handlers '(("[d1]" "SPC") ("|*" "*"))))
+							   ;; The original rules for smartparens had an odd quirk: inserting two
+							   ;; asterixex would replace nearby quotes with asterixes. These two rules
+							   ;; set out to fix this.
+							   (sp-local-pair "**" nil :actions :rem)
+							   (sp-local-pair "*" "*"
+											  :actions '(insert skip)
+											  :unless '(:rem sp-point-at-bol-p)
+											  ;; * then SPC will delete the second asterix and assume
+											  ;; you wanted a bullet point. * followed by another *
+											  ;; will produce an extra, assuming you wanted **|**.
+											  :post-handlers '(("[d1]" "SPC") ("|*" "*"))))
 
-                ;; This keybind allows * to skip over **.
-                (map! :map markdown-mode-map
-                      :ig "*" (λ! (if (looking-at-p "\\*\\* *$")
-                                      (forward-char 2)
-                                      (call-interactively 'self-insert-command)))))
+				;; This keybind allows * to skip over **.
+				(map! :map markdown-mode-map
+					  :ig "*" (λ! (if (looking-at-p "\\*\\* *$")
+									  (forward-char 2)
+									  (call-interactively 'self-insert-command)))))
 
-        ;; Highjacks backspace to:
-        ;;  a) balance spaces inside brackets/parentheses ( | ) -> (|)
-        ;;  b) delete up to nearest column multiple of `tab-width' at a time
-        ;;  c) close empty multiline brace blocks in one step:
-        ;;     {
-        ;;     |
-        ;;     }
-        ;;     becomes {|}
-        ;;  d) refresh smartparens' :post-handlers, so SPC and RET expansions work
-        ;;     even after a backspace.
-        ;;  e) properly delete smartparen pairs when they are encountered, without
-        ;;     the need for strict mode.
-        ;;  f) do none of this when inside a string
-        (advice-add #'delete-backward-char :override #'+default*delete-backward-char))
+		;; Highjacks backspace to:
+		;;  a) balance spaces inside brackets/parentheses ( | ) -> (|)
+		;;  b) delete up to nearest column multiple of `tab-width' at a time
+		;;  c) close empty multiline brace blocks in one step:
+		;;     {
+		;;     |
+		;;     }
+		;;     becomes {|}
+		;;  d) refresh smartparens' :post-handlers, so SPC and RET expansions work
+		;;     even after a backspace.
+		;;  e) properly delete smartparen pairs when they are encountered, without
+		;;     the need for strict mode.
+		;;  f) do none of this when inside a string
+		(advice-add #'delete-backward-char :override #'+default*delete-backward-char))
 
 ;; Makes `newline-and-indent' continue comments (and more reliably)
 (advice-add #'newline-and-indent :override #'+default*newline-indent-and-continue-comments)
@@ -215,39 +215,39 @@
   (define-key key-translation-map [S-iso-lefttab] [backtab])
   ;; Fix conventional OS keys in Emacs
   (map! "s-`" #'other-frame  ; fix frame-switching
-        ;; fix OS window/frame navigation/manipulation keys
-        "s-w" #'delete-window
-        "s-W" #'delete-frame
-        "s-n" #'+default/new-buffer
-        "s-N" #'make-frame
-        "s-q" (if (daemonp) #'delete-frame #'save-buffers-kill-terminal)
-        "C-s-f" #'toggle-frame-fullscreen
-        ;; Restore somewhat common navigation
-        "s-l" #'goto-line
-        ;; Restore OS undo, save, copy, & paste keys (without cua-mode, because
-        ;; it imposes some other functionality and overhead we don't need)
-        "s-f" #'swiper
-        "s-z" #'undo
-        "s-Z" #'redo
-        "s-c" #'evil-yank #'copy-region-as-kill
-        "s-v" #'yank
-        "s-s" #'save-buffer
-        :v "s-x" #'kill-region
-        ;; Buffer-local font scaling
-        "s-+" #'doom/reset-font-size
-        "s-=" #'doom/increase-font-size
-        "s--" #'doom/decrease-font-size
-        ;; Conventional text-editing keys & motions
-        "s-a" #'mark-whole-buffer
-        :g "s-/" (λ! (save-excursion (comment-line 1)))
-        :n "s-/" #'evil-commentary-line
-        :v "s-/" #'evil-commentary
-        :gi  [s-backspace] #'doom/backward-kill-to-bol-and-indent
-        :gi  [s-left]      #'doom/backward-to-bol-or-indent
-        :gi  [s-right]     #'doom/forward-to-last-non-comment-or-eol
-        :gi  [M-backspace] #'backward-kill-word
-        :gi  [M-left]      #'backward-word
-        :gi  [M-right]     #'forward-word))
+		;; fix OS window/frame navigation/manipulation keys
+		"s-w" #'delete-window
+		"s-W" #'delete-frame
+		"s-n" #'+default/new-buffer
+		"s-N" #'make-frame
+		"s-q" (if (daemonp) #'delete-frame #'save-buffers-kill-terminal)
+		"C-s-f" #'toggle-frame-fullscreen
+		;; Restore somewhat common navigation
+		"s-l" #'goto-line
+		;; Restore OS undo, save, copy, & paste keys (without cua-mode, because
+		;; it imposes some other functionality and overhead we don't need)
+		"s-f" #'swiper
+		"s-z" #'undo
+		"s-Z" #'redo
+		"s-c" #'evil-yank #'copy-region-as-kill
+		"s-v" #'yank
+		"s-s" #'save-buffer
+		:v "s-x" #'kill-region
+		;; Buffer-local font scaling
+		"s-+" #'doom/reset-font-size
+		"s-=" #'doom/increase-font-size
+		"s--" #'doom/decrease-font-size
+		;; Conventional text-editing keys & motions
+		"s-a" #'mark-whole-buffer
+		:g "s-/" (λ! (save-excursion (comment-line 1)))
+		:n "s-/" #'evil-commentary-line
+		:v "s-/" #'evil-commentary
+		:gi  [s-backspace] #'doom/backward-kill-to-bol-and-indent
+		:gi  [s-left]      #'doom/backward-to-bol-or-indent
+		:gi  [s-right]     #'doom/forward-to-last-non-comment-or-eol
+		:gi  [M-backspace] #'backward-kill-word
+		:gi  [M-left]      #'backward-word
+		:gi  [M-right]     #'forward-word))
 
 
 ;;
@@ -326,32 +326,32 @@
 
 ;; Make M-x harder to miss
 (define-key! 'override
-             "M-x" #'execute-extended-command
-             "A-x" #'execute-extended-command)
+			 "M-x" #'execute-extended-command
+			 "A-x" #'execute-extended-command)
 
 ;; A Doom convention where C-s on popups and interactive searches will invoke
 ;; ivy/helm for their superior filtering.
 (define-key! :keymaps +default-minibuffer-maps
-             "C-s" #'counsel-minibuffer-history)
+			 "C-s" #'counsel-minibuffer-history)
 
 ;; Smarter C-a/C-e for both Emacs and Evil. C-a will jump to indentation.
 ;; Pressing it again will send you to the true bol. Same goes for C-e, except
 ;; it will ignore comments+trailing whitespace before jumping to eol.
 (map! :gi "C-a" #'doom/backward-to-bol-or-indent
-      :gi "C-e" #'doom/forward-to-last-non-comment-or-eol
-      ;; Standardizes the behavior of modified RET to match the behavior of
-      ;; other editors, particularly Atom, textedit, textmate, and vscode, in
-      ;; which ctrl+RET will add a new "item" below the current one and
-      ;; cmd+RET (Mac) / meta+RET (elsewhere) will add a new, blank line below
-      ;; the current one.
-      :gni [C-return]    #'+default/newline-below
-      :gni [C-S-return]  #'+default/newline-above
-      (:when IS-MAC
-             :gni [s-return]    #'+default/newline-below
-             :gni [S-s-return]  #'+default/newline-above)
-      (:unless IS-MAC
-               :gni [M-return]    #'+default/newline-below
-               :gni [M-S-return]  #'+default/newline-above))
+	  :gi "C-e" #'doom/forward-to-last-non-comment-or-eol
+	  ;; Standardizes the behavior of modified RET to match the behavior of
+	  ;; other editors, particularly Atom, textedit, textmate, and vscode, in
+	  ;; which ctrl+RET will add a new "item" below the current one and
+	  ;; cmd+RET (Mac) / meta+RET (elsewhere) will add a new, blank line below
+	  ;; the current one.
+	  :gni [C-return]    #'+default/newline-below
+	  :gni [C-S-return]  #'+default/newline-above
+	  (:when IS-MAC
+			 :gni [s-return]    #'+default/newline-below
+			 :gni [S-s-return]  #'+default/newline-above)
+	  (:unless IS-MAC
+			   :gni [M-return]    #'+default/newline-below
+			   :gni [M-S-return]  #'+default/newline-above))
 
 
 ;;
@@ -371,8 +371,8 @@
 
 ;; Make SPC u SPC u [...] possible (#747)
 (map! :map universal-argument-map
-      :prefix doom-leader-key     "u" #'universal-argument-more
-      :prefix doom-leader-alt-key "u" #'universal-argument-more)
+	  :prefix doom-leader-key     "u" #'universal-argument-more
+	  :prefix doom-leader-alt-key "u" #'universal-argument-more)
 
 ;;(set-frame-parameter (selected-frame) 'alpha '(<active> . <inactive>))
  ;;(set-frame-parameter (selected-frame) 'alpha <both>)

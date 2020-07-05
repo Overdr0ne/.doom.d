@@ -280,6 +280,7 @@ ARG is set, prompt for a known project to search from."
   (interactive
    (list current-prefix-arg (thing-at-point 'symbol t)))
   (require 'org)
+
   (let ((default-directory org-directory))
     (+default/search-project-for-symbol-at-point
      nil symbol)))
