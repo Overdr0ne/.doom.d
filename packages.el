@@ -19,8 +19,10 @@
 
 ;; (package! anzu)
 ;; (package! evil-anzu)
-;; (package! doom-modeline)
+(package! doom-modeline)
 ;; (package! shrink-path)
+;; (package! spaceline)
+(package! spaceline-all-the-icons)
 
 (package! avy)
 (package! ace-link)
@@ -37,7 +39,10 @@
 (package! sclang-extensions)
 (package! sclang-snippets)
 (package! w3m)
+
 (package! cyberpunk-2019-theme)
+(package! acme-theme)
+
 (package! interaction-log)
 (package! visual-fill-column)
 (package! helm-recoll)
@@ -61,7 +66,7 @@
 (package! load-theme-buffer-local)
 
 (package! evil-cleverparens)
-(package! lispyville)
+(package! lispy)
 
 (package! projectile)
 ;; (package! perspective)
@@ -79,6 +84,7 @@
 (package! dired-rainbow)
 (package! dired-ranger)
 (package! dired-filter)
+(package! dired-du)
 (package! dired+ :recipe (:host github :repo "emacsmirror/dired-plus"))
 (package! highlight)
 
@@ -97,3 +103,22 @@
 ;; (package! pretty-mode)
 
 (package! names)
+
+(package! exwm)
+
+(package! sx)
+
+(package! md4rd)
+
+(package! magithub)
+
+(package! quelpa)
+
+(package! queue)
+
+(package! all-the-icons-gnus)
+(package! nnhackernews)
+
+(package! wordnut)
+
+(package! xwwp)

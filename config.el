@@ -1,5 +1,6 @@
 (load! "+base")
-(load! "+use-package")
+(load! "+functions")
+(load! "+modules")
 (load! "+bindings")
 
 (set-frame-parameter (selected-frame) 'alpha '(93 . 70))
@@ -39,10 +40,16 @@
 ;; (defun test-buf-p ()
 ;;  (when (buffer-file-name) (string= (file-name-base (buffer-file-name)) "config")))
 ;; (setq doom-unreal-buffer-functions '(test-buf-p))
-(add-hook! '(helpful-mode-hook Info-mode-hook term-mode-hook comint-mode-hook help-mode-hook profiler-report-mode-hook) #'doom-mark-buffer-as-real-h)
+(add-hook! '(rcirc-mode-hook eww-mode-hook Info-mode-hook helpful-mode-hook term-mode-hook comint-mode-hook help-mode-hook profiler-report-mode-hook) #'doom-mark-buffer-as-real-h)
+;; (add-hook! (emacs-lisp-mode) #'(lambda () (add-to-list (make-local-variable 'company-backends) 'company-elisp)))
+(general-add-hook 'emacs-lisp-mode-hook #'(lambda () (add-to-list (make-local-variable 'company-backends) 'company-elisp)))
+;; (add-hook 'emacs-lisp-mode-hook #'(lambda () (rainbow-delimiters-mode)))
 
-(add-hook! (emacs-lisp-mode) #'(lambda () (add-to-list (make-local-variable 'company-backends) 'company-elisp)))
-(add-hook 'emacs-lisp-mode-hook #'(lambda () (add-to-list (make-local-variable 'company-backends) 'company-elisp)))
-(add-hook 'emacs-lisp-mode-hook #'(lambda () (rainbow-delimiters-mode)))
+(general-add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
+(general-add-hook '(closure-mode-hook emacs-lisp-mode-hook) #'evil-cleverparens-mode)
+(general-add-hook 'emacs-lisp-mode-hook #'(lambda () (setq indent-tabs-mode nil)))
 
-(setq company-idle-delay 1)
+(setq company-idle-delay 10)
+
+(delete "~/.emacs.d/.local/" projectile-globally-ignored-directories)
+
